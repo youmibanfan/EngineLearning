@@ -1,5 +1,12 @@
 #pragma once
 
+#if defined (MATCH_INNER_VISIBLE)
+    #define INNER_VISIBLE public
+    #define INNER_PROTECT public
+#else
+    #define INNER_VISIBLE private
+    #define INNER_PROTECT protected
+#endif
 
 namespace Core
 {
@@ -22,9 +29,5 @@ public: \
 	no_copy_construction(Class) \
 	no_move_construction(Class) \
 	default_construction(Class)
-
-// ===========================================================
-	template<typename DSTTYPE, typename SRCTYPE>
-	DSTTYPE TypeTransform(SRCTYPE src_type);
 
 }

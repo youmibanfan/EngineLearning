@@ -1,13 +1,15 @@
 
 #include "core_impl/EngineLoggerImpl.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "core_impl/utils.h"
+
 
 
 
 namespace Core
 {
 	template <>
-	spdlog::level::level_enum TypeTransform<spdlog::level::level_enum, LogLevel>(LogLevel src_level)
+	spdlog::level::level_enum transform<spdlog::level::level_enum, LogLevel>(LogLevel src_level)
 	{
 		switch (src_level)
 		{
@@ -48,7 +50,7 @@ namespace Core
 		m_is_initialized = true;
 		m_spd_logger = spdlog::stdout_color_mt("Engine Core");
 		m_spd_logger->set_level(
-			TypeTransform<spdlog::level::level_enum>(m_log_level));
+			transform<spdlog::level::level_enum>(m_log_level));
 	}
 
 	void EngineLogger::Destory()
@@ -65,7 +67,7 @@ namespace Core
 		if (m_is_initialized)
 		{
 			m_spd_logger->set_level(
-				TypeTransform<spdlog::level::level_enum>(m_log_level));
+				transform<spdlog::level::level_enum>(m_log_level));
 		}
 
 	}

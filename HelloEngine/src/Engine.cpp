@@ -1,8 +1,7 @@
 #include "Engine/Engine.h"
 #include <iostream>
 //#include <vulkan/vulkan.h>
-//#include "core/EngineLogger.h"
-#include "core_impl/EngineLoggerImpl.h"
+#include "core/EngineLogger.h"
 
 namespace HelloEngine
 {
