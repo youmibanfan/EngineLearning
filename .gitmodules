@@ -1,3 +1,15 @@
 [submodule "thirdparty/spdlog"]
 	path = thirdparty/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "thirdparty/glm"]
+	path = thirdparty/glm
+	url = https://gitee.com/mirrors/glm.git
+[submodule "thirdparty/glfw"]
+	path = thirdparty/glfw
+	url = https://gitee.com/colorcolor/glfw.git
+[submodule "thirdparty/VulkanMemoryAllocator"]
+	path = thirdparty/VulkanMemoryAllocator
+	url = https://gitee.com/Link-Not-Found/VulkanMemoryAllocator.git
+[submodule "thirdparty/rapidobj"]
+	path = thirdparty/rapidobj
+	url = https://github.com/guybrush77/rapidobj.git
