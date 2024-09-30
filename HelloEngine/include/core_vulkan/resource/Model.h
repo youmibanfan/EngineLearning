@@ -6,6 +6,7 @@
 #include "core_vulkan/resource/VertexAttributeSet.h"
 #include "core_vulkan/resource/ModelAccelerationStructure.h"
 #include "Common.h"
+#include "core_vulkan/resource/CustomDataRegistrar.h"
 
 namespace Core {
     struct Vertex {

@@ -5,6 +5,8 @@
 #include "core_vulkan/resource/buffer.h"
 #include "core_vulkan/RenderPassBuilder.h"
 #include "core_vulkan/resource/Model.h"
+#include "core_vulkan/RenderPass.h"
+#include "core_vulkan/FrameBuffer.h"
 
 #include <functional>
 

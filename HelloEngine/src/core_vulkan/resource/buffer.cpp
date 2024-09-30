@@ -1,6 +1,9 @@
 
 #include "core_vulkan/resource/buffer.h"
 #include <vk_mem_alloc.h>
+#include <core_impl/Setting.h>
+#include <core_vulkan/Manager.h>
+#include <core_vulkan/transform.h>
 
 namespace Core {
     Buffer::Buffer(uint64_t size, vk::BufferUsageFlags buffer_usage, VmaMemoryUsage vma_usage, VmaAllocationCreateFlags vma_flags) : size(size), mapped(false), data_ptr(nullptr) {
@@ -10,7 +13,7 @@ namespace Core {
         VmaAllocationCreateInfo buffer_alloc_info {};
         buffer_alloc_info.flags = vma_flags;
         buffer_alloc_info.usage = vma_usage;
-        vmaCreateBuffer(manager->vma_allocator, reinterpret_cast<VkBufferCreateInfo *>(&buffer_create_info), &buffer_alloc_info, reinterpret_cast<VkBuffer *>(&buffer), &buffer_allocation, nullptr);
+        vmaCreateBuffer(g_manager->m_vma_allocator, reinterpret_cast<VkBufferCreateInfo *>(&buffer_create_info), &buffer_alloc_info, reinterpret_cast<VkBuffer *>(&buffer), &buffer_allocation, nullptr);
     }
 
     Buffer::Buffer(Buffer &&rhs) {
@@ -31,7 +34,7 @@ namespace Core {
             return data_ptr;
         }
         mapped = true;
-        vmaMapMemory(manager->vma_allocator, buffer_allocation, &data_ptr);
+        vmaMapMemory(g_manager->m_vma_allocator, buffer_allocation, &data_ptr);
         return data_ptr;
     }
 
@@ -44,27 +47,27 @@ namespace Core {
             return;
         }
         mapped = false;
-        vmaUnmapMemory(manager->vma_allocator, buffer_allocation);
+        vmaUnmapMemory(g_manager->m_vma_allocator, buffer_allocation);
     }
 
     Buffer::~Buffer() {
         unmap();
-        vmaDestroyBuffer(manager->vma_allocator, buffer, buffer_allocation);
+        vmaDestroyBuffer(g_manager->m_vma_allocator, buffer, buffer_allocation);
     }
 
     InFlightBuffer::InFlightBuffer(uint64_t size, vk::BufferUsageFlags buffer_usage, VmaMemoryUsage vma_usage, VmaAllocationCreateFlags vma_flags) {
-        in_flight_buffers.reserve(setting.max_in_flight_frame);
-        for (uint32_t i = 0; i < setting.max_in_flight_frame; i ++) {
+        in_flight_buffers.reserve(g_setting.m_max_in_flight_frame);
+        for (uint32_t i = 0; i < g_setting.m_max_in_flight_frame; i ++) {
             in_flight_buffers.push_back(std::make_unique<Buffer>(size, buffer_usage, vma_usage, vma_flags));
         }
     }
 
     void *InFlightBuffer::map() {
-        return in_flight_buffers[runtime_setting->current_in_flight]->map();
+        return in_flight_buffers[g_runtime_setting->m_current_in_flight]->map();
     }
 
     void InFlightBuffer::unmap() {
-        in_flight_buffers[runtime_setting->current_in_flight]->unmap();
+        in_flight_buffers[g_runtime_setting->m_current_in_flight]->unmap();
     }
 
     InFlightBuffer::~InFlightBuffer() {
@@ -81,13 +84,13 @@ namespace Core {
     }
 
     void TwoStageBuffer::flush() {
-        auto command_buffer = manager->command_pool->allocate_single_use();
+        auto command_buffer = g_manager->m_command_pool->allocate_single_use();
         vk::BufferCopy copy {};
         copy.setSrcOffset(0)
             .setDstOffset(0)
             .setSize(staging->size);
         command_buffer.copyBuffer(staging->buffer, buffer->buffer, copy);
-        manager->command_pool->free_single_use(command_buffer);
+        g_manager->m_command_pool->free_single_use(command_buffer);
     }
 
     void TwoStageBuffer::unmap() {

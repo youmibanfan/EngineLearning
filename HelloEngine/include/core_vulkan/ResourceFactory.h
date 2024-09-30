@@ -3,6 +3,7 @@
 #include "Common.h"
 
 #include "core_vulkan/resource/RenderPassBuilder.h"
+#include "core_vulkan/Renderer.h"
 
 
 namespace Core
